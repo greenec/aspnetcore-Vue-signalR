@@ -5,6 +5,8 @@ import store from './store'
 import { sync } from 'vuex-router-sync'
 import App from 'components/app-root'
 
+import 'bootstrap'
+
 var signalR = require('./signalr-client.min.js');
 
 Vue.prototype.$http = axios;
