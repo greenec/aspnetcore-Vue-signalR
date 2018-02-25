@@ -7,6 +7,9 @@ import App from 'components/app-root'
 
 import 'bootstrap'
 
+import $ from 'jquery';
+window.jQuery = $;
+
 var signalR = require('./signalr-client.min.js');
 
 Vue.prototype.$http = axios;

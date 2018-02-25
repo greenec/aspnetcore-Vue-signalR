@@ -19,6 +19,11 @@
                             <span :class="route.style"></span> {{ route.display }}
                         </router-link>
                     </li>
+                    <li>
+                        <a href="/Employees">
+                            <span class="glyphicon glyphicon-user"></span> Employees
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>

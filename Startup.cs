@@ -5,6 +5,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Vue2SpaSignalR.Services.Hubs;
+using Microsoft.EntityFrameworkCore;
+using Vue2SpaSignalR.Models;
 
 namespace Vue2SpaSignalR
 {
@@ -25,6 +27,10 @@ namespace Vue2SpaSignalR
 
             services.AddSingleton<IHostedService, Counter>();
             services.AddSingleton<IHostedService, Weather>();
+
+            // TODO: different connection strings based on environment
+            services.AddDbContext<Vue2SpaContext>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("Vue2SpaContext")));
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
