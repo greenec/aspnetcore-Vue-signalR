@@ -3,11 +3,11 @@
         <div class="navbar navbar-inverse">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
                 <a class="navbar-brand" href="/">Vue2Spa</a>
             </div>
             <div class="clearfix"></div>
@@ -31,15 +31,15 @@
 </template>
 
 <script>
-import { routes } from '../routes'
+    import { routes } from '../routes'
 
-export default {
-    data() {
-        return {
-            routes
+    export default {
+        data() {
+            return {
+                routes
+            }
         }
     }
-}
 </script>
 
 <style>
