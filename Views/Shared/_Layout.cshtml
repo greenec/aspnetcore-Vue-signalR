@@ -36,7 +36,12 @@
         @RenderBody()
     </div>
 
+
     <script src="~/dist/vendor.js" asp-append-version="true"></script>
+
+    <environment names="Development">
+        <script src="~/dist/main.js" asp-append-version="true"></script>
+    </environment>
 
     @RenderSection("scripts", required: false)
 </body>
