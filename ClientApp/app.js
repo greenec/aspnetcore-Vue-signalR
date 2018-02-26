@@ -9,6 +9,8 @@ import jquery from 'jquery';
 window.$ = jquery
 window.jQuery = jquery;
 
+// TODO: load jQuery validation and expose jQuery globally in a file other than main.js
+
 import 'bootstrap'
 import 'jquery-validation'
 import 'jquery-validation-unobtrusive'
