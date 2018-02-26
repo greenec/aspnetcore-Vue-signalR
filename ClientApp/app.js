@@ -5,10 +5,13 @@ import store from './store'
 import { sync } from 'vuex-router-sync'
 import App from 'components/app-root'
 
-import 'bootstrap'
+import jquery from 'jquery';
+window.$ = jquery
+window.jQuery = jquery;
 
-import $ from 'jquery';
-window.jQuery = $;
+import 'bootstrap'
+import 'jquery-validation'
+import 'jquery-validation-unobtrusive'
 
 var signalR = require('./signalr-client.min.js');
 
