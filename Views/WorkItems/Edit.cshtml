@@ -1,4 +1,4 @@
-@model Vue2SpaSignalR.Models.WorkItemEmployeeViewModel
+@model Vue2SpaSignalR.Models.WorkItem
 
 @{
     ViewData["Title"] = "Edit Work Item";
@@ -15,10 +15,10 @@
             <input type="hidden" asp-for="ID" />
             <div class="form-group">
                 <label asp-for="UserID" class="control-label"></label>
-                <select asp-for="UserID" asp-items="Model.Employees" class="form-control">
+                <select asp-for="UserID" asp-items="ViewBag.Employees" class="form-control">
                     <option value="">Please select an Employee</option>
                 </select>
-                <span asp-validation-for="Employees" class="text-danger"></span>
+                <span asp-validation-for="UserID" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="TaskName" class="control-label"></label>

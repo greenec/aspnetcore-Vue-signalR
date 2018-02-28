@@ -6,12 +6,12 @@ namespace Vue2SpaSignalR.Models
     {
         public int ID { get; set; }
 
+        public int UserID { get; set; }
+
         [Display(Name = "Task Name")]
         public string TaskName { get; set; }
 
         public string Description { get; set; }
-
-        public int UserID { get; set; }
 
         [Display(Name = "Assigned Employee")]
         public string EmployeeName { get; set; }

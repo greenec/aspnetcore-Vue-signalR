@@ -47,13 +47,9 @@ namespace Vue2Spa.Controllers
         public async Task<IActionResult> Create()
         {
             var employees = await GetEmployees();
+            ViewBag.Employees = new SelectList(employees, "ID", "Name");
 
-            var workItemEmployeeVM = new WorkItemEmployeeViewModel
-            {
-                Employees = new SelectList(employees, "ID", "Name")
-            };
-
-            return View(workItemEmployeeVM);
+            return View();
         }
 
         // POST: WorkItems/Create
@@ -80,8 +76,6 @@ namespace Vue2Spa.Controllers
                 return NotFound();
             }
 
-            var employees = await GetEmployees();
-
             var workItem = await _context.WorkItem.SingleOrDefaultAsync(m => m.ID == id);
 
             if (workItem == null)
@@ -89,16 +83,10 @@ namespace Vue2Spa.Controllers
                 return NotFound();
             }
 
-            var workItemEmployeeVM = new WorkItemEmployeeViewModel
-            {
-                ID = workItem.ID,
-                TaskName = workItem.TaskName,
-                Description = workItem.Description,
-                UserID = workItem.UserID,
-                Employees = new SelectList(employees, "ID", "Name")
-            };
+            var employees = await GetEmployees();
+            ViewBag.Employees = new SelectList(employees, "ID", "Name");
 
-            return View(workItemEmployeeVM);
+            return View(workItem);
         }
 
         // POST: WorkItems/Edit/5
@@ -172,18 +160,18 @@ namespace Vue2Spa.Controllers
 
         private async Task<List<WorkItemDetailed>> GetDetailedWorkItems()
         {
-            var workItemQuery = from i in _context.WorkItem
+            var workItemsQuery = from i in _context.WorkItem
                                 join e in _context.Employee on i.UserID equals e.ID
                                 select new WorkItemDetailed
                                 {
                                     ID = i.ID,
                                     TaskName = i.TaskName,
                                     Description = i.Description,
-                                    UserID = e.ID,
+                                    UserID = i.UserID,
                                     EmployeeName = e.Name
                                 };
 
-            return await workItemQuery.ToListAsync();
+            return await workItemsQuery.ToListAsync();
         }
 
         private async Task<List<Employee>> GetEmployees()
@@ -205,7 +193,7 @@ namespace Vue2Spa.Controllers
                                     ID = i.ID,
                                     TaskName = i.TaskName,
                                     Description = i.Description,
-                                    UserID = e.ID,
+                                    UserID = i.UserID,
                                     EmployeeName = e.Name
                                 };
 
