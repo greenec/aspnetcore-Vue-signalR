@@ -66,6 +66,10 @@ namespace Vue2Spa.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
+            var employees = await GetEmployees();
+            ViewBag.Employees = new SelectList(employees, "ID", "Name");
+
             return View(workItem);
         }
 
@@ -122,6 +126,10 @@ namespace Vue2Spa.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+
+            var employees = await GetEmployees();
+            ViewBag.Employees = new SelectList(employees, "ID", "Name");
+
             return View(workItem);
         }
 
