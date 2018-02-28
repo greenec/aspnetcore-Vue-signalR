@@ -1,0 +1,36 @@
+@model Vue2SpaSignalR.Models.WorkItemDetailed
+
+@{
+    ViewData["Title"] = "Work Item Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Work Item</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.EmployeeName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.EmployeeName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.TaskName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.TaskName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.ID">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

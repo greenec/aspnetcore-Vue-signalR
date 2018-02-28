@@ -24,6 +24,11 @@
                             <span class="glyphicon glyphicon-user"></span> Employees
                         </a>
                     </li>
+                    <li>
+                        <a href="/WorkItems">
+                            <span class="glyphicon glyphicon-tasks"></span> Work Items
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
