@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 
 namespace Vue2SpaSignalR.Models
@@ -9,7 +10,7 @@ namespace Vue2SpaSignalR.Models
         [Display(Name = "Assigned Employee")]
         public int UserID { get; set; }
 
-        [Display(Name = "Task Name"), Required]
+        [Display(Name = "Task Name"), Required, Remote(action: "ValidateTaskName", controller: "WorkItems")]
         public string TaskName { get; set; }
 
         [Required]
