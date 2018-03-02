@@ -1,15 +1,17 @@
+using Microsoft.AspNetCore.SignalR;
+using RestSharp;
 using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.SignalR;
-
+using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace Vue2SpaSignalR.Services.Hubs
 {
     public class WeatherHub : Hub
     {
-       
+
     }
 
     public class Weather : HostedService
@@ -21,25 +23,27 @@ namespace Vue2SpaSignalR.Services.Hubs
 
         private IHubClients Clients { get; }
 
+        private List<WeatherForecast> _forecast = new List<WeatherForecast>();
+        private DateTime _lastrun = DateTime.Now;
+
         private static readonly string[] Summaries = {
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
         };
 
         public async Task UpdateWeatherForecasts()
         {
-            var rng = new Random();
-            var randomWeatherForescast = Enumerable.Range(1, 5).Select(index => new WeatherForecast
+            if (DateTime.Now.Subtract(_lastrun).TotalMinutes >= 10)
             {
-                DateFormatted = DateTime.Now.AddDays(index).ToString("d"),
-                TemperatureC = rng.Next(-20, 55),
-                Summary = Summaries[rng.Next(Summaries.Length)]
-            });
+                await UpdateForecast("18040");
+            }
 
-            await Clients.All.InvokeAsync("weather", randomWeatherForescast);
+            await Clients.All.InvokeAsync("weather", _forecast);
         }
 
         protected override async Task ExecuteAsync(CancellationToken cancellationToken)
         {
+            await UpdateForecast("18040");
+
             while (true)
             {
                 await UpdateWeatherForecasts();
@@ -54,6 +58,32 @@ namespace Vue2SpaSignalR.Services.Hubs
                     return;
                 }
             }
+        }
+
+        private async Task UpdateForecast(string zip)
+        {
+            RestClient client = new RestClient("https://api.openweathermap.org");
+            RestRequest request = new RestRequest("data/2.5/weather?zip={zip},us&APPID={apikey}", Method.GET);
+
+            request.AddUrlSegment("zip", zip);
+            request.AddUrlSegment("apikey", "");
+
+            var response = await client.ExecuteTaskAsync(request);
+
+            var json = JsonConvert.DeserializeObject<dynamic>(response.Content);
+
+            int temp = (int)(json.main.temp - 273.15);
+
+            _forecast = new List<WeatherForecast>
+            {
+                new WeatherForecast {
+                    DateFormatted = DateTime.Now.ToString(),
+                    TemperatureC = temp,
+                    Summary = json.weather[0].main + " - " + json.weather[0].description
+                }
+            };
+
+            _lastrun = DateTime.Now;
         }
 
         public class WeatherForecast
