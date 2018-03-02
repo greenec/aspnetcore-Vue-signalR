@@ -2,7 +2,7 @@
     <div>
         <h1>Weather forecast</h1>
 
-        <p>This component demonstrates fetching data from the server.</p> <p v-if="lastUpdated">Last Updated: {{ lastUpdated }}</p>
+        <p>Here is the weather in Easton, Pennsylvania from OpenWeatherMap's API, updated every 10 minutes.</p> <p v-if="lastUpdated">Last Updated: {{ lastUpdated }}</p>
 
         <p v-if="!forecasts"><em>Loading...</em></p>
 
@@ -39,7 +39,7 @@
             }
         },
         created: function () {
-            this.connection = new this.$signalR.HubConnection('/weather');
+            this.connection = new this.$signalR.HubConnection('/weather-feed');
         },
         mounted: function () {
             this.connection.start();

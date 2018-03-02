@@ -26,10 +26,6 @@ namespace Vue2SpaSignalR.Services.Hubs
         private List<WeatherForecast> _forecast = new List<WeatherForecast>();
         private DateTime _lastrun = DateTime.Now;
 
-        private static readonly string[] Summaries = {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
-
         public async Task UpdateWeatherForecasts()
         {
             if (DateTime.Now.Subtract(_lastrun).TotalMinutes >= 10)

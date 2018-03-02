@@ -52,7 +52,7 @@ namespace Vue2SpaSignalR
             app.UseSignalR(routes =>
             {
                 routes.MapHub<CounterHub>("count");
-                routes.MapHub<WeatherHub>("weather");
+                routes.MapHub<WeatherHub>("weather-feed");
             });
 
             app.UseMvc(routes =>
