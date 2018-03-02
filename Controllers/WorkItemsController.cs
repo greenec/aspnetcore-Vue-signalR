@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Vue2SpaSignalR.Models;
 
@@ -65,6 +66,10 @@ namespace Vue2Spa.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
+            var employees = await GetEmployees();
+            ViewBag.Employees = new SelectList(employees, "ID", "Name");
+
             return View(workItem);
         }
 
@@ -121,6 +126,10 @@ namespace Vue2Spa.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+
+            var employees = await GetEmployees();
+            ViewBag.Employees = new SelectList(employees, "ID", "Name");
+
             return View(workItem);
         }
 
@@ -153,6 +162,23 @@ namespace Vue2Spa.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // Validate Task Name
+        [AcceptVerbs("Get", "Post")]
+        public IActionResult ValidateTaskName(string taskName)
+        {
+            Regex rgx = new Regex("[^a-z0-9]");
+            taskName = rgx.Replace(taskName.ToLower(), string.Empty);
+
+            string reversed = new string(taskName.ToCharArray().Reverse().ToArray());
+
+            if (taskName != reversed)
+            {
+                return Json("All task names must be palindromes");
+            }
+
+            return Json(true);
+        }
+
         private bool WorkItemExists(int id)
         {
             return _context.WorkItem.Any(e => e.ID == id);
@@ -161,15 +187,15 @@ namespace Vue2Spa.Controllers
         private async Task<List<WorkItemDetailed>> GetDetailedWorkItems()
         {
             var workItemsQuery = from i in _context.WorkItem
-                                join e in _context.Employee on i.UserID equals e.ID
-                                select new WorkItemDetailed
-                                {
-                                    ID = i.ID,
-                                    TaskName = i.TaskName,
-                                    Description = i.Description,
-                                    UserID = i.UserID,
-                                    EmployeeName = e.Name
-                                };
+                                 join e in _context.Employee on i.UserID equals e.ID
+                                 select new WorkItemDetailed
+                                 {
+                                     ID = i.ID,
+                                     TaskName = i.TaskName,
+                                     Description = i.Description,
+                                     UserID = i.UserID,
+                                     EmployeeName = e.Name
+                                 };
 
             return await workItemsQuery.ToListAsync();
         }
