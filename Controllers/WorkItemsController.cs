@@ -6,8 +6,9 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Vue2SpaSignalR.Models;
+using Vue2SpaSignalR.Models.ViewModels;
 
-namespace Vue2Spa.Controllers
+namespace Vue2SpaSignalR.Controllers
 {
     public class WorkItemsController : Controller
     {

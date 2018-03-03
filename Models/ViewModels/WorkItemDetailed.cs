@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Vue2SpaSignalR.Models
+namespace Vue2SpaSignalR.Models.ViewModels
 {
     public class WorkItemDetailed
     {

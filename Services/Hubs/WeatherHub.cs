@@ -1,11 +1,12 @@
 using Microsoft.AspNetCore.SignalR;
 using RestSharp;
 using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using System.Linq;
 using System.Collections.Generic;
+using Vue2SpaSignalR.Models.OpenWeatherModels;
 
 namespace Vue2SpaSignalR.Services.Hubs
 {
@@ -59,25 +60,32 @@ namespace Vue2SpaSignalR.Services.Hubs
         private async Task UpdateForecast(string zip)
         {
             RestClient client = new RestClient("https://api.openweathermap.org");
-            RestRequest request = new RestRequest("data/2.5/weather?zip={zip},us&APPID={apikey}", Method.GET);
+            RestRequest request = new RestRequest("data/2.5/forecast?zip={zip},us&APPID={apikey}", Method.GET);
 
             request.AddUrlSegment("zip", zip);
             request.AddUrlSegment("apikey", "");
 
             var response = await client.ExecuteTaskAsync(request);
 
-            var json = JsonConvert.DeserializeObject<dynamic>(response.Content);
-
-            int temp = (int)(json.main.temp - 273.15);
-
-            _forecast = new List<WeatherForecast>
+            var settings = new JsonSerializerSettings
             {
-                new WeatherForecast {
-                    DateFormatted = DateTime.Now.ToString(),
-                    TemperatureC = temp,
-                    Summary = json.weather[0].main + " - " + json.weather[0].description
+                Error = (sender, args) =>
+                {
+                    if (System.Diagnostics.Debugger.IsAttached)
+                    {
+                        System.Diagnostics.Debugger.Break();
+                    }
                 }
             };
+
+            var json = JsonConvert.DeserializeObject<ExtendedWeatherReport>(response.Content, settings);
+
+            _forecast = json.List.Select(x => new WeatherForecast
+            {
+                DateFormatted = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc).AddSeconds(x.Dt).ToLocalTime().ToString("g"),
+                TemperatureC = (int)(x.Main.Temp - 273.15),
+                Summary = x.Weather.First().Main + " - " + x.Weather.First().Description
+            }).ToList();
 
             _lastrun = DateTime.Now;
         }
