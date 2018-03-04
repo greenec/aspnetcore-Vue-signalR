@@ -156,6 +156,7 @@ namespace Vue2SpaSignalR.Controllers
 
         private async Task<List<Employee>> GetEmployees()
         {
+            // return await _context.Employee.Include("WorkItems").Where(x => Vue2SpaContext.Soundex(x.Name) == Vue2SpaContext.Soundex("conner")).OrderBy(x => x.Name).ToListAsync();
             return await _context.Employee.Include("WorkItems").OrderBy(x => x.Name).ToListAsync();
         }
     }
