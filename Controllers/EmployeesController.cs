@@ -30,7 +30,7 @@ namespace Vue2SpaSignalR.Controllers
             }
 
             var employee = await _context.Employee
-                .SingleOrDefaultAsync(m => m.ID == id);
+                .SingleOrDefaultAsync(m => m.Id == id);
             if (employee == null)
             {
                 return NotFound();
@@ -50,7 +50,7 @@ namespace Vue2SpaSignalR.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Name,Email")] Employee employee)
+        public async Task<IActionResult> Create([Bind("Id,Name,Email")] Employee employee)
         {
             if (ModelState.IsValid)
             {
@@ -69,7 +69,7 @@ namespace Vue2SpaSignalR.Controllers
                 return NotFound();
             }
 
-            var employee = await _context.Employee.SingleOrDefaultAsync(m => m.ID == id);
+            var employee = await _context.Employee.SingleOrDefaultAsync(m => m.Id == id);
             if (employee == null)
             {
                 return NotFound();
@@ -82,9 +82,9 @@ namespace Vue2SpaSignalR.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,Name,Email")] Employee employee)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Email")] Employee employee)
         {
-            if (id != employee.ID)
+            if (id != employee.Id)
             {
                 return NotFound();
             }
@@ -98,7 +98,7 @@ namespace Vue2SpaSignalR.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!EmployeeExists(employee.ID))
+                    if (!EmployeeExists(employee.Id))
                     {
                         return NotFound();
                     }
@@ -121,7 +121,7 @@ namespace Vue2SpaSignalR.Controllers
             }
 
             var employee = await _context.Employee
-                .SingleOrDefaultAsync(m => m.ID == id);
+                .SingleOrDefaultAsync(m => m.Id == id);
             if (employee == null)
             {
                 return NotFound();
@@ -135,7 +135,7 @@ namespace Vue2SpaSignalR.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var employee = await _context.Employee.SingleOrDefaultAsync(m => m.ID == id);
+            var employee = await _context.Employee.SingleOrDefaultAsync(m => m.Id == id);
             _context.Employee.Remove(employee);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
@@ -143,7 +143,7 @@ namespace Vue2SpaSignalR.Controllers
 
         private bool EmployeeExists(int id)
         {
-            return _context.Employee.Any(e => e.ID == id);
+            return _context.Employee.Any(e => e.Id == id);
         }
     }
 }

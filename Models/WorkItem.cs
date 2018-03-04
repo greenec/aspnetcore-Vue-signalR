@@ -1,19 +1,22 @@
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace Vue2SpaSignalR.Models
 {
+    [Table("WorkItems")]
     public class WorkItem
     {
-        public int ID { get; set; }
+        public int Id { get; set; }
 
         [Display(Name = "Assigned Employee")]
-        public int UserID { get; set; }
+        public int UserId { get; set; }
 
-        [Display(Name = "Task Name"), Required, Palindrome] // Remote(action: "ValidateTaskName", controller: "WorkItems")]
+        [Required, Palindrome] // [Remote(action: "ValidateTaskName", controller: "WorkItems")]
+        [Display(Name = "Task Name")]
         public string TaskName { get; set; }
 
         [Required]
@@ -34,7 +37,7 @@ namespace Vue2SpaSignalR.Models
             var taskName = model.TaskName.ToLower();
 
             Regex rgx = new Regex("[^a-z0-9]");
-            taskName = rgx.Replace(taskName, string.Empty);
+            taskName = rgx.Replace(taskName, "");
 
             string reversed = new string(taskName.ToCharArray().Reverse().ToArray());
 
@@ -49,9 +52,9 @@ namespace Vue2SpaSignalR.Models
         private string GetErrorMessage(ValidationContext validationContext)
         {
             // Message that was supplied
-            if (!string.IsNullOrEmpty(this.ErrorMessage))
+            if (!string.IsNullOrEmpty(ErrorMessage))
             {
-                return this.ErrorMessage;
+                return ErrorMessage;
             }
 
             // Custom message

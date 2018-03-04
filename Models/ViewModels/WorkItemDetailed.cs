@@ -4,9 +4,9 @@ namespace Vue2SpaSignalR.Models.ViewModels
 {
     public class WorkItemDetailed
     {
-        public int ID { get; set; }
+        public int Id { get; set; }
 
-        public int UserID { get; set; }
+        public int UserId { get; set; }
 
         [Display(Name = "Task Name")]
         public string TaskName { get; set; }
@@ -14,6 +14,6 @@ namespace Vue2SpaSignalR.Models.ViewModels
         public string Description { get; set; }
 
         [Display(Name = "Assigned Employee")]
-        public string EmployeeName { get; set; }
+        public Employee Employee { get; set; }
     }
 }

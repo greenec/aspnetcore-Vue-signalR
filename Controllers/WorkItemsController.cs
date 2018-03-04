@@ -49,7 +49,7 @@ namespace Vue2SpaSignalR.Controllers
         public async Task<IActionResult> Create()
         {
             var employees = await GetEmployees();
-            ViewBag.Employees = new SelectList(employees, "ID", "Name");
+            ViewBag.Employees = new SelectList(employees, "Id", "Name");
 
             return View();
         }
@@ -59,7 +59,7 @@ namespace Vue2SpaSignalR.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,UserID,TaskName,Description")] WorkItem workItem)
+        public async Task<IActionResult> Create([Bind("Id,UserId,TaskName,Description")] WorkItem workItem)
         {
             if (ModelState.IsValid)
             {
@@ -69,7 +69,7 @@ namespace Vue2SpaSignalR.Controllers
             }
 
             var employees = await GetEmployees();
-            ViewBag.Employees = new SelectList(employees, "ID", "Name");
+            ViewBag.Employees = new SelectList(employees, "Id", "Name");
 
             return View(workItem);
         }
@@ -82,7 +82,7 @@ namespace Vue2SpaSignalR.Controllers
                 return NotFound();
             }
 
-            var workItem = await _context.WorkItem.SingleOrDefaultAsync(m => m.ID == id);
+            var workItem = await _context.WorkItem.SingleOrDefaultAsync(m => m.Id == id);
 
             if (workItem == null)
             {
@@ -90,7 +90,7 @@ namespace Vue2SpaSignalR.Controllers
             }
 
             var employees = await GetEmployees();
-            ViewBag.Employees = new SelectList(employees, "ID", "Name");
+            ViewBag.Employees = new SelectList(employees, "Id", "Name");
 
             return View(workItem);
         }
@@ -100,9 +100,9 @@ namespace Vue2SpaSignalR.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,UserID,TaskName,Description")] WorkItem workItem)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,UserId,TaskName,Description")] WorkItem workItem)
         {
-            if (id != workItem.ID)
+            if (id != workItem.Id)
             {
                 return NotFound();
             }
@@ -116,7 +116,7 @@ namespace Vue2SpaSignalR.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!WorkItemExists(workItem.ID))
+                    if (!WorkItemExists(workItem.Id))
                     {
                         return NotFound();
                     }
@@ -129,7 +129,7 @@ namespace Vue2SpaSignalR.Controllers
             }
 
             var employees = await GetEmployees();
-            ViewBag.Employees = new SelectList(employees, "ID", "Name");
+            ViewBag.Employees = new SelectList(employees, "Id", "Name");
 
             return View(workItem);
         }
@@ -157,7 +157,7 @@ namespace Vue2SpaSignalR.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var workItem = await _context.WorkItem.SingleOrDefaultAsync(m => m.ID == id);
+            var workItem = await _context.WorkItem.SingleOrDefaultAsync(m => m.Id == id);
             _context.WorkItem.Remove(workItem);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
@@ -182,20 +182,20 @@ namespace Vue2SpaSignalR.Controllers
 
         private bool WorkItemExists(int id)
         {
-            return _context.WorkItem.Any(e => e.ID == id);
+            return _context.WorkItem.Any(e => e.Id == id);
         }
 
         private async Task<List<WorkItemDetailed>> GetDetailedWorkItems()
         {
             var workItemsQuery = from i in _context.WorkItem
-                                 join e in _context.Employee on i.UserID equals e.ID
+                                 join e in _context.Employee on i.UserId equals e.Id
                                  select new WorkItemDetailed
                                  {
-                                     ID = i.ID,
+                                     Id = i.Id,
                                      TaskName = i.TaskName,
                                      Description = i.Description,
-                                     UserID = i.UserID,
-                                     EmployeeName = e.Name
+                                     UserId = i.UserId,
+                                     Employee = e
                                  };
 
             return await workItemsQuery.ToListAsync();
@@ -213,15 +213,15 @@ namespace Vue2SpaSignalR.Controllers
         private async Task<WorkItemDetailed> GetWorkItemDetailed(int? id)
         {
             var workItemQuery = from i in _context.WorkItem
-                                join e in _context.Employee on i.UserID equals e.ID
-                                where i.ID == id
+                                join e in _context.Employee on i.UserId equals e.Id
+                                where i.Id == id
                                 select new WorkItemDetailed
                                 {
-                                    ID = i.ID,
+                                    Id = i.Id,
                                     TaskName = i.TaskName,
                                     Description = i.Description,
-                                    UserID = i.UserID,
-                                    EmployeeName = e.Name
+                                    UserId = i.UserId,
+                                    Employee = e
                                 };
 
             return await workItemQuery.SingleOrDefaultAsync();
