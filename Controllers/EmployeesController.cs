@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Vue2SpaSignalR.Models;
@@ -18,7 +19,9 @@ namespace Vue2SpaSignalR.Controllers
         // GET: Employees
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Employee.ToListAsync());
+            var employees = await GetEmployees();
+
+            return View(employees);
         }
 
         // GET: Employees/Details/5
@@ -29,8 +32,8 @@ namespace Vue2SpaSignalR.Controllers
                 return NotFound();
             }
 
-            var employee = await _context.Employee
-                .SingleOrDefaultAsync(m => m.Id == id);
+            var employee = await GetEmployee(id);
+
             if (employee == null)
             {
                 return NotFound();
@@ -120,8 +123,8 @@ namespace Vue2SpaSignalR.Controllers
                 return NotFound();
             }
 
-            var employee = await _context.Employee
-                .SingleOrDefaultAsync(m => m.Id == id);
+            var employee = await GetEmployee(id);
+
             if (employee == null)
             {
                 return NotFound();
@@ -144,6 +147,16 @@ namespace Vue2SpaSignalR.Controllers
         private bool EmployeeExists(int id)
         {
             return _context.Employee.Any(e => e.Id == id);
+        }
+
+        private async Task<Employee> GetEmployee(int? id)
+        {
+            return await _context.Employee.Include("WorkItems").Where(x => x.Id == id).SingleOrDefaultAsync();
+        }
+
+        private async Task<List<Employee>> GetEmployees()
+        {
+            return await _context.Employee.Include("WorkItems").OrderBy(x => x.Name).ToListAsync();
         }
     }
 }

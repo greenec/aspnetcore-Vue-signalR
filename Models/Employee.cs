@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -13,5 +14,8 @@ namespace Vue2SpaSignalR.Models
 
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
+
+        [Display(Name = "Work Items")]
+        public List<WorkItem> WorkItems { get; set; }
     }
 }

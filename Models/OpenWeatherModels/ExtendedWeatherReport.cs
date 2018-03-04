@@ -68,7 +68,7 @@ namespace Vue2SpaSignalR.Models.OpenWeatherModels
         public Sys Sys { get; set; }
 
         [JsonProperty("dt_txt")]
-        public System.DateTimeOffset DtTxt { get; set; }
+        public string DtTxt { get; set; }
     }
 
     public partial class Clouds
