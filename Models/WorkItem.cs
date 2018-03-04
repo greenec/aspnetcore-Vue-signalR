@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Mvc;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -13,7 +12,7 @@ namespace Vue2SpaSignalR.Models
         public int Id { get; set; }
 
         [Display(Name = "Assigned Employee")]
-        public int UserId { get; set; }
+        public int EmployeeId { get; set; }
 
         [Required, Palindrome] // [Remote(action: "ValidateTaskName", controller: "WorkItems")]
         [Display(Name = "Task Name")]
@@ -21,6 +20,8 @@ namespace Vue2SpaSignalR.Models
 
         [Required]
         public string Description { get; set; }
+
+        public Employee Employee { get; set; }
     }
 
     public class Palindrome : ValidationAttribute

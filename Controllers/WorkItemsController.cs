@@ -6,7 +6,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Vue2SpaSignalR.Models;
-using Vue2SpaSignalR.Models.ViewModels;
 
 namespace Vue2SpaSignalR.Controllers
 {
@@ -22,7 +21,7 @@ namespace Vue2SpaSignalR.Controllers
         // GET: WorkItems
         public async Task<IActionResult> Index()
         {
-            var workItems = await GetDetailedWorkItems();
+            var workItems = await GetWorkItems();
 
             return View(workItems);
         }
@@ -35,7 +34,7 @@ namespace Vue2SpaSignalR.Controllers
                 return NotFound();
             }
 
-            var workItem = await GetWorkItemDetailed(id);
+            var workItem = await GetWorkItem(id);
 
             if (workItem == null)
             {
@@ -59,7 +58,7 @@ namespace Vue2SpaSignalR.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,UserId,TaskName,Description")] WorkItem workItem)
+        public async Task<IActionResult> Create([Bind("Id,EmployeeId,TaskName,Description")] WorkItem workItem)
         {
             if (ModelState.IsValid)
             {
@@ -100,7 +99,7 @@ namespace Vue2SpaSignalR.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,UserId,TaskName,Description")] WorkItem workItem)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,EmployeeId,TaskName,Description")] WorkItem workItem)
         {
             if (id != workItem.Id)
             {
@@ -142,7 +141,7 @@ namespace Vue2SpaSignalR.Controllers
                 return NotFound();
             }
 
-            var workItem = await GetWorkItemDetailed(id);
+            var workItem = await GetWorkItem(id);
 
             if (workItem == null)
             {
@@ -185,46 +184,19 @@ namespace Vue2SpaSignalR.Controllers
             return _context.WorkItem.Any(e => e.Id == id);
         }
 
-        private async Task<List<WorkItemDetailed>> GetDetailedWorkItems()
+        private async Task<List<WorkItem>> GetWorkItems()
         {
-            var workItemsQuery = from i in _context.WorkItem
-                                 join e in _context.Employee on i.UserId equals e.Id
-                                 select new WorkItemDetailed
-                                 {
-                                     Id = i.Id,
-                                     TaskName = i.TaskName,
-                                     Description = i.Description,
-                                     UserId = i.UserId,
-                                     Employee = e
-                                 };
-
-            return await workItemsQuery.ToListAsync();
+            return await _context.WorkItem.Include("Employee").ToListAsync();
         }
 
         private async Task<List<Employee>> GetEmployees()
         {
-            IQueryable<Employee> employeeQuery = from e in _context.Employee
-                                                 orderby e.Name
-                                                 select e;
-
-            return await employeeQuery.ToListAsync();
+            return await _context.Employee.OrderBy(x => x.Name).ToListAsync();
         }
 
-        private async Task<WorkItemDetailed> GetWorkItemDetailed(int? id)
+        private async Task<WorkItem> GetWorkItem(int? id)
         {
-            var workItemQuery = from i in _context.WorkItem
-                                join e in _context.Employee on i.UserId equals e.Id
-                                where i.Id == id
-                                select new WorkItemDetailed
-                                {
-                                    Id = i.Id,
-                                    TaskName = i.TaskName,
-                                    Description = i.Description,
-                                    UserId = i.UserId,
-                                    Employee = e
-                                };
-
-            return await workItemQuery.SingleOrDefaultAsync();
+            return await _context.WorkItem.Include("Employee").Where(x => x.Id == id).SingleOrDefaultAsync();
         }
     }
 }
