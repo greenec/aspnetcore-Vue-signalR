@@ -2,7 +2,7 @@ using Newtonsoft.Json;
 
 namespace Vue2SpaSignalR.Models.OpenWeatherModels
 {
-    public partial class ExtendedWeatherReport
+    public class ExtendedWeatherReport
     {
         [JsonProperty("cod")]
         public string Cod { get; set; }

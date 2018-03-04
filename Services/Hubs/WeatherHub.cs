@@ -9,10 +9,14 @@ using System.Collections.Generic;
 using Vue2SpaSignalR.Models.OpenWeatherModels;
 
 namespace Vue2SpaSignalR.Services.Hubs
-{
+{    
     public class WeatherHub : Hub
     {
-
+        public override async Task OnConnectedAsync()
+        {
+            // TODO: on connect, send the current forecast to the client
+            await Clients.Client(Context.ConnectionId).InvokeAsync("weather", new List<string>());
+        }
     }
 
     public class Weather : HostedService
@@ -66,19 +70,7 @@ namespace Vue2SpaSignalR.Services.Hubs
             request.AddUrlSegment("apikey", "");
 
             var response = await client.ExecuteTaskAsync(request);
-
-            var settings = new JsonSerializerSettings
-            {
-                Error = (sender, args) =>
-                {
-                    if (System.Diagnostics.Debugger.IsAttached)
-                    {
-                        System.Diagnostics.Debugger.Break();
-                    }
-                }
-            };
-
-            var json = JsonConvert.DeserializeObject<ExtendedWeatherReport>(response.Content, settings);
+            var json = JsonConvert.DeserializeObject<ExtendedWeatherReport>(response.Content);
 
             _forecast = json.List.Select(x => new WeatherForecast
             {
