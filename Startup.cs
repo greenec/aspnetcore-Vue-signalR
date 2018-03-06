@@ -28,6 +28,8 @@ namespace Vue2SpaSignalR
             services.AddSingleton<IHostedService, Counter>();
             services.AddSingleton<IHostedService, Weather>();
 
+            services.AddSingleton<IConfiguration>(Configuration);
+
             // TODO: different connection strings based on environment
             services.AddDbContext<Vue2SpaContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("Vue2SpaContext")));

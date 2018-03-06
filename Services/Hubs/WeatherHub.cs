@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using System.Linq;
 using System.Collections.Generic;
 using Vue2SpaSignalR.Models.OpenWeatherModels;
+using Microsoft.Extensions.Configuration;
 
 namespace Vue2SpaSignalR.Services.Hubs
 {    
@@ -21,12 +22,14 @@ namespace Vue2SpaSignalR.Services.Hubs
 
     public class Weather : HostedService
     {
-        public Weather(IHubContext<WeatherHub> context)
+        public Weather(IHubContext<WeatherHub> context, IConfiguration configuration)
         {
             Clients = context.Clients;
+            Configuration = configuration;
         }
 
         private IHubClients Clients { get; }
+        private IConfiguration Configuration { get; }
 
         private List<WeatherForecast> _forecast = new List<WeatherForecast>();
         private DateTime _lastrun = DateTime.Now;
@@ -67,7 +70,7 @@ namespace Vue2SpaSignalR.Services.Hubs
             RestRequest request = new RestRequest("data/2.5/forecast?zip={zip},us&APPID={apikey}", Method.GET);
 
             request.AddUrlSegment("zip", zip);
-            request.AddUrlSegment("apikey", "");
+            request.AddUrlSegment("apikey", Configuration["OpenWeatherApiKey"]);
 
             var response = await client.ExecuteTaskAsync(request);
             var json = JsonConvert.DeserializeObject<ExtendedWeatherReport>(response.Content);
