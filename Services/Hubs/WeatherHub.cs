@@ -10,7 +10,7 @@ using Vue2SpaSignalR.Models.OpenWeatherModels;
 using Microsoft.Extensions.Configuration;
 
 namespace Vue2SpaSignalR.Services.Hubs
-{    
+{
     public class WeatherHub : Hub
     {
         public override async Task OnConnectedAsync()
@@ -73,14 +73,24 @@ namespace Vue2SpaSignalR.Services.Hubs
             request.AddUrlSegment("apikey", Configuration["OpenWeatherApiKey"]);
 
             var response = await client.ExecuteTaskAsync(request);
-            var json = JsonConvert.DeserializeObject<ExtendedWeatherReport>(response.Content);
-
-            _forecast = json.List.Select(x => new WeatherForecast
+            if (response.IsSuccessful)
             {
-                DateFormatted = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc).AddSeconds(x.Dt).ToLocalTime().ToString("g"),
-                TemperatureC = (int)(x.Main.Temp - 273.15),
-                Summary = x.Weather.First().Main + " - " + x.Weather.First().Description
-            }).ToList();
+                var json = JsonConvert.DeserializeObject<ExtendedWeatherReport>(response.Content);
+
+                _forecast = json.List.Select(x => new WeatherForecast
+                {
+                    DateFormatted = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc).AddSeconds(x.Dt).ToLocalTime().ToString("g"),
+                    TemperatureC = (int)(x.Main.Temp - 273.15),
+                    Summary = x.Weather.First().Main + " - " + x.Weather.First().Description
+                }).ToList();
+
+                _lastrun = DateTime.Now;
+            }
+            else
+            {
+                // try again in 5 minutes
+                _lastrun = DateTime.Now - TimeSpan.FromMinutes(5);
+            }
 
             _lastrun = DateTime.Now;
         }
