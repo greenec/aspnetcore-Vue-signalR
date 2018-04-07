@@ -10,10 +10,6 @@ namespace Vue2SpaSignalR.Models
         }
 
         public DbSet<Employee> Employee { get; set; }
-
         public DbSet<WorkItem> WorkItem { get; set; }
-
-        [DbFunction("SOUNDEX")]
-        public static string Soundex(string s) => throw new System.NotSupportedException();
     }
 }

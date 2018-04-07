@@ -31,8 +31,7 @@ namespace Vue2SpaSignalR
             services.AddSingleton<IConfiguration>(Configuration);
 
             // TODO: different connection strings based on environment
-            services.AddDbContext<Vue2SpaContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("Vue2SpaContext")));
+            services.AddDbContext<Vue2SpaContext>(options => options.UseMySQL(Configuration.GetConnectionString("Vue2SpaContext")));
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
